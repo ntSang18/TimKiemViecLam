@@ -17,6 +17,8 @@ import java.awt.SystemColor;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.BevelBorder;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class LoginFrame {
 
@@ -92,6 +94,10 @@ public class LoginFrame {
 		panel.add(txtMatkhau);
 		
 		JButton btnDangnhap = new JButton("\u0110\u0103ng nh\u1EADp");
+		btnDangnhap.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btnDangnhap.setForeground(SystemColor.desktop);
 		btnDangnhap.setBackground(new Color(220, 20, 60));
 		btnDangnhap.setBorder(null);

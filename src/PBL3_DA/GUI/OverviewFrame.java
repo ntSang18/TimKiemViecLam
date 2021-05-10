@@ -7,7 +7,13 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import java.awt.SystemColor;
+import java.util.ArrayList;
+import java.util.Collections;
+
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
+
 import java.awt.Color;
 import java.awt.BorderLayout;
 import javax.swing.JButton;
@@ -31,17 +37,33 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.SoftBevelBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+import javax.swing.text.TableView.TableRow;
+
+
+import PBL3_DA.BLL.BLL_Timviec;
+import PBL3_DA.DTO.DiaChi;
+import PBL3_DA.DTO.ViecLam;
+
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.JTable;
 import javax.swing.Icon;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 public class OverviewFrame {
 
 	private JFrame MainFrame;
-	private JTable table;
 	private JTextField txtTimkiemNC;
+	private JTable table;
+	private DefaultTableModel model;
 
 	/**
 	 * Launch the application.
@@ -64,6 +86,26 @@ public class OverviewFrame {
 	 */
 	public OverviewFrame() {
 		initialize();
+		model = (DefaultTableModel) table.getModel();
+		ShowViecLam(BLL_Timviec.Instance().GetListViecLam(1));
+	}
+	
+	public void ShowViecLam(ArrayList<ViecLam> l)
+	{
+		try 
+		{
+			model.getDataVector().removeAllElements();
+			model.fireTableDataChanged();
+			for (ViecLam i : l) 
+			{
+				DiaChi a = BLL_Timviec.Instance().GetDiaChiById(i.GetIdDC());
+				model.addRow(new Object[] {
+						i.GetId(), i.GetTieuDe(), i.GetHinhThuc(), i.GetNganhNghe(), i.GetGioiTinhTuyen(), i.GetKinhNghiemTuyen(), i.GetLuongCoBan(), a.GetTinh(), i.GetNgayHetHan(), i.GetTenCT() 
+				});
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 
 	/**
@@ -83,8 +125,10 @@ public class OverviewFrame {
 		txtTimKiem.setColumns(10);
 		
 		JComboBox cbbNganhNghe = new JComboBox();
+		cbbNganhNghe.setModel(new DefaultComboBoxModel(new String[] {"", "B\u00E1n h\u00E0ng", "T\u01B0 v\u1EA5n b\u1EA3o hi\u1EC3m", "B\u00E1o ch\u00ED/Bi\u00EAn t\u1EADp vi\u00EAn", "B\u1EA5t \u0111\u1ED9ng s\u1EA3n", "Bi\u00EAn d\u1ECBch/Phi\u00EAn d\u1ECBch", "B\u01B0u ch\u00EDnh vi\u1EC5n th\u00F4ng ", "C\u01A1 kh\u00ED/K\u0129 thu\u1EADt \u1EE9ng d\u1EE5ng", "C\u00F4ng ngh\u1EC7 th\u00F4ng tin", "D\u1EA7u kh\u00ED/\u0110\u1ECBa ch\u1EA5t", "D\u1EC7t may", "B\u1EA3o v\u1EC7/V\u1EC7 s\u0129/An ninh", "Ch\u0103m s\u00F3c kh\u00E1ch h\u00E0ng", "\u0110i\u1EC7n/\u0110i\u1EC7n t\u1EED/\u0110i\u1EC7n l\u1EA1nh", "Du l\u1ECBch/Nh\u00E0 h\u00E0ng/Kh\u00E1ch s\u1EA1n", "D\u01B0\u1EE3c/H\u00F3a ch\u1EA5t/Sinh h\u00F3a", "Gi\u1EA3i tr\u00ED/Vui ch\u01A1i", "Gi\u00E1o d\u1EE5c/\u0110\u00E0o t\u1EA1o/Th\u01B0 vi\u1EC7n", "Giao th\u00F4ng/V\u1EADn t\u1EA3i/Th\u1EE7y l\u1EE3i/C\u1EA7u \u0111\u01B0\u1EDDng", "Gi\u00E0y da/Thu\u1ED9c gia", "H\u00E0nh ch\u00EDnh/Th\u01B0 k\u00ED/Tr\u1EE3 l\u00FD", "Kho v\u1EADn/V\u1EADt t\u01B0/Thu mua", "Ki\u1EBFn tr\u00FAc/N\u1ED9i th\u1EA5t", "Kinh doanh", "Lao \u0111\u1ED9ng ph\u1ED5 th\u00F4ng", "Lu\u1EADt/Ph\u00E1p l\u00FD", "M\u00F4i tr\u01B0\u1EDDng/X\u1EED l\u00FD ch\u1EA5t th\u1EA3i", "M\u1EF9 ph\u1EA9m/Th\u1EDDi trang/Trang s\u1EE9c", "Ng\u00E2n h\u00E0ng/Ch\u1EE9ng kho\u00E1ng/\u0110\u1EA7u t\u01B0", "Ngh\u1EC7 thu\u1EADt/\u0110i\u1EC7n \u1EA3nh", "Nh\u00E2n s\u1EF1", "N\u00F4ng/L\u00E2m/Ng\u01B0 nghi\u1EC7p", "Quan h\u1EC7 \u0111\u1ED1i ngo\u1EA1i", "Th\u1EA9m \u0111\u1ECBnh/Gi\u00E1m \u0111\u1ECBnh/Qu\u1EA3n l\u00FD ch\u1EA5t l\u01B0\u1EE3ng", "Qu\u1EA3n l\u00FD \u0111i\u1EC1u h\u00E0nh", "Qu\u1EA3ng c\u00E1o/Marketing/PR", "S\u1EA3n xu\u1EA5t/V\u1EADn h\u00E0nh s\u1EA3n xu\u1EA5t", "T\u00E0i ch\u00EDnh/K\u1EBF to\u00E1n/Ki\u1EC3m to\u00E1n", "Th\u1EC3 d\u1EE5c/Th\u1EC3 thao", "Thi\u1EBFt k\u1EBF/M\u1EF9 thu\u1EADt", "Th\u1EDDi v\u1EE5/B\u00E1n th\u1EDDi gian", "Th\u1EF1c ph\u1EA9m/D\u1ECBch v\u1EE5 an u\u1ED1ng", "X\u00E2y d\u1EF1ng", "Xu\u1EA5t - Nh\u1EADp kh\u1EA9u/Ngo\u1EA1i th\u01B0\u01A1ng", "Y t\u1EBF", "Ngo\u1EA1i ng\u1EEF", "Khu ch\u1EBF xu\u1EA5t/Khu c\u00F4ng nghi\u1EC7p", "L\u00E0m \u0111\u1EB9p/Th\u1EC3 l\u1EF1c/Spa", "T\u00E0i x\u1EBF/L\u00E1i xe/Giao nh\u1EADn", "Trang thi\u1EBFt b\u1ECB c\u00F4ng nghi\u1EC7p", "Trang thi\u1EBFt b\u1ECB gia d\u1EE5ng", "Trang thi\u1EBFt b\u1ECB v\u0103n ph\u00F2ng", "PG/PB/L\u1EC5 t\u00E2n", "Ph\u00E1t tri\u1EC3n th\u1ECB tr\u01B0\u1EDDng", "Ph\u1EE5c v\u1EE5/T\u1EA1p v\u1EE5/Gi\u00FAp vi\u1EC7c"}));
 		
 		JComboBox cbbTinhThanh = new JComboBox();
+		cbbTinhThanh.setModel(new DefaultComboBoxModel(new String[] {"", "H\u00E0 N\u1ED9i", "TP H\u1ED3 Ch\u00ED Minh", "An Giang", "B\u00E0 R\u1ECBa - V\u0169ng T\u00E0u", "B\u1EAFc C\u1EA1n", "B\u1EAFc Giang", "B\u1EA1c Li\u00EAu", "B\u1EAFc Ninh", "B\u1EBFn Tre", "B\u00ECnh D\u01B0\u01A1ng", "B\u00ECnh Ph\u01B0\u1EDBc", "B\u00ECnh Thu\u1EADn", "B\u00ECnh \u0110\u1ECBnh", "C\u00E0 Mau", "C\u1EA7n Th\u01A1", "Cao B\u1EB1ng", "Gia Lai", "H\u00E0 Giang", "H\u00E0 Nam", "H\u00E0 T\u0129nh", "H\u1EA3i D\u01B0\u01A1ng", "H\u1EA3i Ph\u00F2ng", "H\u1EADu Giang", "H\u00F2a B\u00ECnh", "H\u01B0ng Y\u00EAn", "Kh\u00E1nh H\u00F2a", "Ki\u00EAn Giang", "Kon Tum", "Lai Ch\u00E2u", "L\u00E2m \u0110\u1ED3ng", "L\u1EA1ng S\u01A1n", "L\u00E0o Cai", "Long An", "Nam \u0110\u1ECBnh", "Ngh\u1EC7 An", "Ninh B\u00ECnh", "Ninh Thu\u1EADn", "Ph\u00FA Th\u1ECD", "Ph\u00FA Y\u00EAn", "Qu\u1EA3ng B\u00ECnh", "Qu\u1EA3ng Nam", "Qu\u1EA3ng Ng\u00E3i", "Qu\u1EA3ng Ninh", "Qu\u1EA3ng Tr\u1ECB", "S\u00F3c Tr\u0103ng", "S\u01A1 La", "T\u00E2y Ninh", "Th\u00E1i B\u00ECnh", "Th\u00E1i Nguy\u00EAn", "Thanh H\u00F3a", "Th\u1EEBa Thi\u00EAn Hu\u1EBF", "Ti\u1EC1n Giang", "Tr\u00E0 Vinh", "Tuy\u00EAn Quang", "V\u0129nh Long", "V\u0129nh Ph\u00FAc", "Y\u00EAn B\u00E1i", "\u0110\u00E0 N\u0103ng", "\u0110\u1EAFk L\u1EAFk", "\u0110i\u1EC7n Bi\u00EAn", "\u0110\u1ED3ng Nai", "\u0110\u1ED3ng Th\u00E1p"}));
 		
 		JLabel lbTimKiem = new JLabel("T\u00ECm ki\u1EBFm");
 		lbTimKiem.setForeground(new Color(255, 255, 255));
@@ -99,6 +143,11 @@ public class OverviewFrame {
 		lbTinhThanh.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		
 		JButton btnTim = new JButton("T\u00ECm");
+		btnTim.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ShowViecLam(BLL_Timviec.Instance().SearchSimp(txtTimKiem.getText(), (String)cbbNganhNghe.getSelectedItem(), (String)cbbTinhThanh.getSelectedItem(), 1));
+			}
+		});
 		btnTim.setBorder(null);
 		btnTim.setBackground(Color.LIGHT_GRAY);
 		btnTim.setForeground(new Color(0, 0, 0));
@@ -355,25 +404,29 @@ public class OverviewFrame {
 		);
 		panel_2.setLayout(gl_panel_2);
 		
-		table = new JTable();
-		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBackground(new Color(230, 230, 250));
 		
 		JPanel panel_3_1 = new JPanel();
 		panel_3_1.setBackground(new Color(70, 130, 180));
 		
-		JComboBox cbbNganhngheNC = new JComboBox();
+		JComboBox cbbHinhThuc = new JComboBox();
+		cbbHinhThuc.setModel(new DefaultComboBoxModel(new String[] {"", "Gi\u1EDD h\u00E0nh ch\u00EDnh", "Vi\u1EC7c l\u00E0m thu nh\u1EADp cao", "Vi\u1EC7c l\u00E0m th\u00EAm/L\u00E0m vi\u1EC7c ngo\u00E0i gi\u1EDD", "Th\u1EA7u d\u1EF1 \u00E1n/Freelance/Vi\u1EC7c l\u00E0m t\u1EF1 do", "Vi\u1EC7c l\u00E0m online", "Kinh doanh m\u1EA1ng l\u01B0\u1EDBi", "Gi\u00FAp vi\u1EC7c gia \u0111\u00ECnh", "H\u1EE3p t\u00E1c lao \u0111\u1ED9ng n\u01B0\u1EDBc ngo\u00E0i", "Vi\u1EC7c l\u00E0m ng\u01B0\u1EDDi khuy\u1EBFt t\u1EADt", "Vi\u1EC7c l\u00E0m theo ca/\u0110\u1ED5i ca", "Vi\u1EC7c l\u00E0m cho tri th\u1EE9c l\u1EDBn tu\u1ED5i (tr\u00EAn 50 tu\u1ED5i)"}));
 		
-		JComboBox cbbTinhthanhNC = new JComboBox();
+		JComboBox cbbnganhnghe2 = new JComboBox();
+		cbbnganhnghe2.setModel(new DefaultComboBoxModel(new String[] {"", "B\u00E1n h\u00E0ng", "T\u01B0 v\u1EA5n b\u1EA3o hi\u1EC3m", "B\u00E1o ch\u00ED/Bi\u00EAn t\u1EADp vi\u00EAn", "B\u1EA5t \u0111\u1ED9ng s\u1EA3n", "Bi\u00EAn d\u1ECBch/Phi\u00EAn d\u1ECBch", "B\u01B0u ch\u00EDnh vi\u1EC5n th\u00F4ng ", "C\u01A1 kh\u00ED/K\u0129 thu\u1EADt \u1EE9ng d\u1EE5ng", "C\u00F4ng ngh\u1EC7 th\u00F4ng tin", "D\u1EA7u kh\u00ED/\u0110\u1ECBa ch\u1EA5t", "D\u1EC7t may", "B\u1EA3o v\u1EC7/V\u1EC7 s\u0129/An ninh", "Ch\u0103m s\u00F3c kh\u00E1ch h\u00E0ng", "\u0110i\u1EC7n/\u0110i\u1EC7n t\u1EED/\u0110i\u1EC7n l\u1EA1nh", "Du l\u1ECBch/Nh\u00E0 h\u00E0ng/Kh\u00E1ch s\u1EA1n", "D\u01B0\u1EE3c/H\u00F3a ch\u1EA5t/Sinh h\u00F3a", "Gi\u1EA3i tr\u00ED/Vui ch\u01A1i", "Gi\u00E1o d\u1EE5c/\u0110\u00E0o t\u1EA1o/Th\u01B0 vi\u1EC7n", "Giao th\u00F4ng/V\u1EADn t\u1EA3i/Th\u1EE7y l\u1EE3i/C\u1EA7u \u0111\u01B0\u1EDDng", "Gi\u00E0y da/Thu\u1ED9c gia", "H\u00E0nh ch\u00EDnh/Th\u01B0 k\u00ED/Tr\u1EE3 l\u00FD", "Kho v\u1EADn/V\u1EADt t\u01B0/Thu mua", "Ki\u1EBFn tr\u00FAc/N\u1ED9i th\u1EA5t", "Kinh doanh", "Lao \u0111\u1ED9ng ph\u1ED5 th\u00F4ng", "Lu\u1EADt/Ph\u00E1p l\u00FD", "M\u00F4i tr\u01B0\u1EDDng/X\u1EED l\u00FD ch\u1EA5t th\u1EA3i", "M\u1EF9 ph\u1EA9m/Th\u1EDDi trang/Trang s\u1EE9c", "Ng\u00E2n h\u00E0ng/Ch\u1EE9ng kho\u00E1ng/\u0110\u1EA7u t\u01B0", "Ngh\u1EC7 thu\u1EADt/\u0110i\u1EC7n \u1EA3nh", "Nh\u00E2n s\u1EF1", "N\u00F4ng/L\u00E2m/Ng\u01B0 nghi\u1EC7p", "Quan h\u1EC7 \u0111\u1ED1i ngo\u1EA1i", "Th\u1EA9m \u0111\u1ECBnh/Gi\u00E1m \u0111\u1ECBnh/Qu\u1EA3n l\u00FD ch\u1EA5t l\u01B0\u1EE3ng", "Qu\u1EA3n l\u00FD \u0111i\u1EC1u h\u00E0nh", "Qu\u1EA3ng c\u00E1o/Marketing/PR", "S\u1EA3n xu\u1EA5t/V\u1EADn h\u00E0nh s\u1EA3n xu\u1EA5t", "T\u00E0i ch\u00EDnh/K\u1EBF to\u00E1n/Ki\u1EC3m to\u00E1n", "Th\u1EC3 d\u1EE5c/Th\u1EC3 thao", "Thi\u1EBFt k\u1EBF/M\u1EF9 thu\u1EADt", "Th\u1EDDi v\u1EE5/B\u00E1n th\u1EDDi gian", "Th\u1EF1c ph\u1EA9m/D\u1ECBch v\u1EE5 an u\u1ED1ng", "X\u00E2y d\u1EF1ng", "Xu\u1EA5t - Nh\u1EADp kh\u1EA9u/Ngo\u1EA1i th\u01B0\u01A1ng", "Y t\u1EBF", "Ngo\u1EA1i ng\u1EEF", "Khu ch\u1EBF xu\u1EA5t/Khu c\u00F4ng nghi\u1EC7p", "L\u00E0m \u0111\u1EB9p/Th\u1EC3 l\u1EF1c/Spa", "T\u00E0i x\u1EBF/L\u00E1i xe/Giao nh\u1EADn", "Trang thi\u1EBFt b\u1ECB c\u00F4ng nghi\u1EC7p", "Trang thi\u1EBFt b\u1ECB gia d\u1EE5ng", "Trang thi\u1EBFt b\u1ECB v\u0103n ph\u00F2ng", "PG/PB/L\u1EC5 t\u00E2n", "Ph\u00E1t tri\u1EC3n th\u1ECB tr\u01B0\u1EDDng", "Ph\u1EE5c v\u1EE5/T\u1EA1p v\u1EE5/Gi\u00FAp vi\u1EC7c"}));
 		
-		JComboBox cbbMucluongNC = new JComboBox();
+		JComboBox cbbGioitinh = new JComboBox();
+		cbbGioitinh.setModel(new DefaultComboBoxModel(new String[] {"", "Kh\u00F4ng y\u00EAu c\u1EA7u", "Nam", "N\u1EEF"}));
 		
-		JComboBox cbbTrinhdoNC = new JComboBox();
+		JComboBox cbbKinhNghiem = new JComboBox();
+		cbbKinhNghiem.setModel(new DefaultComboBoxModel(new String[] {"", "Kh\u00F4ng y\u00EAu c\u1EA7u", "D\u01B0\u1EDBi 1 n\u0103m", "Tr\u00EAn 1 n\u0103m", "Tr\u00EAn 2 n\u0103m", "Tr\u00EAn 3 n\u0103m", "Tr\u00EAn 4 n\u0103m", "Tr\u00EAn 5 n\u0103m"}));
 		
-		JComboBox cbbGioitinhNC = new JComboBox();
+		JComboBox cbbLuong = new JComboBox();
+		cbbLuong.setModel(new DefaultComboBoxModel(new String[] {"", "0 - 3 tri\u1EC7u", "3 - 5 tri\u1EC7u", "5 - 7 tri\u1EC7u", "7 - 10 tri\u1EC7u", "10 - 12 tri\u1EC7u", "12 - 15 tri\u1EC7u", "15 - 20 tri\u1EC7u", "20 - 25 tri\u1EC7u", "25 - 30 tri\u1EC7u", "30 - 40 tri\u1EC7u", "40 - 50 tri\u1EC7u ", "Tr\u00EAn 50 tri\u1EC7u"}));
 		
-		JComboBox comboBox_2_1_4_1 = new JComboBox();
+		JComboBox cbbTinh = new JComboBox();
+		cbbTinh.setModel(new DefaultComboBoxModel(new String[] {"", "H\u00E0 N\u1ED9i", "TP H\u1ED3 Ch\u00ED Minh", "An Giang", "B\u00E0 R\u1ECBa - V\u0169ng T\u00E0u", "B\u1EAFc C\u1EA1n", "B\u1EAFc Giang", "B\u1EA1c Li\u00EAu", "B\u1EAFc Ninh", "B\u1EBFn Tre", "B\u00ECnh D\u01B0\u01A1ng", "B\u00ECnh Ph\u01B0\u1EDBc", "B\u00ECnh Thu\u1EADn", "B\u00ECnh \u0110\u1ECBnh", "C\u00E0 Mau", "C\u1EA7n Th\u01A1", "Cao B\u1EB1ng", "Gia Lai", "H\u00E0 Giang", "H\u00E0 Nam", "H\u00E0 T\u0129nh", "H\u1EA3i D\u01B0\u01A1ng", "H\u1EA3i Ph\u00F2ng", "H\u1EADu Giang", "H\u00F2a B\u00ECnh", "H\u01B0ng Y\u00EAn", "Kh\u00E1nh H\u00F2a", "Ki\u00EAn Giang", "Kon Tum", "Lai Ch\u00E2u", "L\u00E2m \u0110\u1ED3ng", "L\u1EA1ng S\u01A1n", "L\u00E0o Cai", "Long An", "Nam \u0110\u1ECBnh", "Ngh\u1EC7 An", "Ninh B\u00ECnh", "Ninh Thu\u1EADn", "Ph\u00FA Th\u1ECD", "Ph\u00FA Y\u00EAn", "Qu\u1EA3ng B\u00ECnh", "Qu\u1EA3ng Nam", "Qu\u1EA3ng Ng\u00E3i", "Qu\u1EA3ng Ninh", "Qu\u1EA3ng Tr\u1ECB", "S\u00F3c Tr\u0103ng", "S\u01A1 La", "T\u00E2y Ninh", "Th\u00E1i B\u00ECnh", "Th\u00E1i Nguy\u00EAn", "Thanh H\u00F3a", "Th\u1EEBa Thi\u00EAn Hu\u1EBF", "Ti\u1EC1n Giang", "Tr\u00E0 Vinh", "Tuy\u00EAn Quang", "V\u0129nh Long", "V\u0129nh Ph\u00FAc", "Y\u00EAn B\u00E1i", "\u0110\u00E0 N\u0103ng", "\u0110\u1EAFk L\u1EAFk", "\u0110i\u1EC7n Bi\u00EAn", "\u0110\u1ED3ng Nai", "\u0110\u1ED3ng Th\u00E1p"}));
 		
 		txtTimkiemNC = new JTextField();
 		txtTimkiemNC.setColumns(10);
@@ -381,40 +434,47 @@ public class OverviewFrame {
 		JLabel lbTimkiemNC = new JLabel("T\u00CCM KI\u1EBEM N\u00C2NG CAO");
 		lbTimkiemNC.setFont(new Font("Calibri", Font.BOLD, 21));
 		
-		JButton btnNewButton_1_2 = new JButton("T\u00ECm ki\u1EBFm");
-		btnNewButton_1_2.setForeground(Color.WHITE);
-		btnNewButton_1_2.setFont(new Font("Calibri", Font.BOLD, 19));
-		btnNewButton_1_2.setBorder(null);
-		btnNewButton_1_2.setBackground(Color.RED);
-		
-		JComboBox comboBox_2_1_5_1 = new JComboBox();
+		JButton btnTimkiem2 = new JButton("T\u00ECm ki\u1EBFm");
+		btnTimkiem2.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ShowViecLam(BLL_Timviec.Instance().ListViecLam(txtTimkiemNC.getText(), 
+						(String)cbbHinhThuc.getSelectedItem(), (String)cbbnganhnghe2.getSelectedItem(), 
+						(String)cbbGioitinh.getSelectedItem(), (String)cbbKinhNghiem.getSelectedItem(), 
+						(String)cbbLuong.getSelectedItem(), (String)cbbTinh.getSelectedItem(), 1));
+			}
+		});
+		btnTimkiem2.setForeground(Color.WHITE);
+		btnTimkiem2.setFont(new Font("Calibri", Font.BOLD, 19));
+		btnTimkiem2.setBorder(null);
+		btnTimkiem2.setBackground(Color.RED);
 		GroupLayout gl_panel_3_1 = new GroupLayout(panel_3_1);
 		gl_panel_3_1.setHorizontalGroup(
-			gl_panel_3_1.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 359, Short.MAX_VALUE)
+			gl_panel_3_1.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panel_3_1.createSequentialGroup()
 					.addGap(46)
-					.addComponent(cbbNganhngheNC, 0, 266, Short.MAX_VALUE)
+					.addComponent(cbbHinhThuc, 0, 266, Short.MAX_VALUE)
 					.addGap(47))
 				.addGroup(gl_panel_3_1.createSequentialGroup()
 					.addGap(46)
-					.addComponent(cbbTinhthanhNC, 0, 266, Short.MAX_VALUE)
+					.addComponent(cbbnganhnghe2, 0, 266, Short.MAX_VALUE)
 					.addGap(47))
 				.addGroup(gl_panel_3_1.createSequentialGroup()
 					.addGap(46)
-					.addComponent(cbbMucluongNC, 0, 266, Short.MAX_VALUE)
+					.addComponent(cbbGioitinh, 0, 266, Short.MAX_VALUE)
 					.addGap(47))
 				.addGroup(gl_panel_3_1.createSequentialGroup()
 					.addGap(46)
-					.addComponent(cbbTrinhdoNC, 0, 266, Short.MAX_VALUE)
+					.addComponent(cbbKinhNghiem, 0, 266, Short.MAX_VALUE)
 					.addGap(47))
 				.addGroup(gl_panel_3_1.createSequentialGroup()
 					.addGap(46)
-					.addComponent(cbbGioitinhNC, 0, 266, Short.MAX_VALUE)
+					.addComponent(cbbLuong, 0, 266, Short.MAX_VALUE)
 					.addGap(47))
 				.addGroup(gl_panel_3_1.createSequentialGroup()
 					.addGap(46)
-					.addComponent(comboBox_2_1_4_1, 0, 266, Short.MAX_VALUE)
+					.addComponent(cbbTinh, 0, 266, Short.MAX_VALUE)
 					.addGap(47))
 				.addGroup(gl_panel_3_1.createSequentialGroup()
 					.addGap(46)
@@ -425,41 +485,36 @@ public class OverviewFrame {
 					.addComponent(lbTimkiemNC, GroupLayout.PREFERRED_SIZE, 215, GroupLayout.PREFERRED_SIZE)
 					.addGap(68))
 				.addGroup(gl_panel_3_1.createSequentialGroup()
-					.addGap(46)
-					.addComponent(comboBox_2_1_5_1, 0, 266, Short.MAX_VALUE)
-					.addGap(47))
-				.addGroup(Alignment.TRAILING, gl_panel_3_1.createSequentialGroup()
 					.addContainerGap(99, Short.MAX_VALUE)
-					.addComponent(btnNewButton_1_2, GroupLayout.PREFERRED_SIZE, 167, GroupLayout.PREFERRED_SIZE)
+					.addComponent(btnTimkiem2, GroupLayout.PREFERRED_SIZE, 167, GroupLayout.PREFERRED_SIZE)
 					.addGap(93))
 		);
 		gl_panel_3_1.setVerticalGroup(
 			gl_panel_3_1.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 486, Short.MAX_VALUE)
 				.addGroup(gl_panel_3_1.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(lbTimkiemNC, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(txtTimkiemNC, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
 					.addGap(11)
-					.addComponent(cbbNganhngheNC, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+					.addComponent(cbbHinhThuc, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
 					.addGap(11)
-					.addComponent(cbbTinhthanhNC, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+					.addComponent(cbbnganhnghe2, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
 					.addGap(11)
-					.addComponent(cbbMucluongNC, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+					.addComponent(cbbGioitinh, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
 					.addGap(11)
-					.addComponent(cbbTrinhdoNC, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+					.addComponent(cbbKinhNghiem, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
 					.addGap(11)
-					.addComponent(cbbGioitinhNC, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+					.addComponent(cbbLuong, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
 					.addGap(11)
-					.addComponent(comboBox_2_1_4_1, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-					.addGap(11)
-					.addComponent(comboBox_2_1_5_1, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addComponent(btnNewButton_1_2, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
+					.addComponent(cbbTinh, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+					.addGap(61)
+					.addComponent(btnTimkiem2, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(41, Short.MAX_VALUE))
 		);
 		panel_3_1.setLayout(gl_panel_3_1);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
 		GroupLayout gl_panel_5 = new GroupLayout(panel_5);
 		gl_panel_5.setHorizontalGroup(
 			gl_panel_5.createParallelGroup(Alignment.TRAILING)
@@ -481,8 +536,8 @@ public class OverviewFrame {
 									.addPreferredGap(ComponentPlacement.RELATED, 152, Short.MAX_VALUE))))
 						.addComponent(panel_2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addGroup(gl_panel_5.createSequentialGroup()
-							.addComponent(table, GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 484, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(panel_3_1, GroupLayout.PREFERRED_SIZE, 359, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)))
 					.addGap(161))
@@ -501,63 +556,107 @@ public class OverviewFrame {
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_panel_5.createParallelGroup(Alignment.LEADING)
-						.addComponent(panel_3_1, GroupLayout.PREFERRED_SIZE, 486, GroupLayout.PREFERRED_SIZE)
-						.addComponent(table, GroupLayout.PREFERRED_SIZE, 497, GroupLayout.PREFERRED_SIZE))
-					.addGap(28))
+					.addGroup(gl_panel_5.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(scrollPane_1)
+						.addComponent(panel_3_1, GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE))
+					.addGap(39))
 		);
 		
-		JComboBox cbbSXPhobien = new JComboBox();
+		table = new JTable();
+		scrollPane_1.setViewportView(table);
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Id", "Ti\u00EAu \u0111\u1EC1", "H\u00ECnh th\u1EE9c", "Ng\u00E0nh ngh\u1EC1", "Gi\u01A1i t\u00EDnh", "Kinh nghi\u1EC7m", "L\u01B0\u01A1ng", "\u0110\u1ECBa ch\u1EC9", "Ng\u00E0y h\u1EBFt h\u1EA1n", "T\u00EAn c\u00F4ng ty"
+			}
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, false, false, false, false, false, false, false, false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		table.getColumnModel().getColumn(0).setPreferredWidth(0);
+		table.getColumnModel().getColumn(0).setMinWidth(0);
+		table.getColumnModel().getColumn(0).setMaxWidth(0);
+		table.getColumnModel().getColumn(1).setPreferredWidth(215);
+		table.getColumnModel().getColumn(2).setPreferredWidth(128);
+		table.getColumnModel().getColumn(3).setPreferredWidth(133);
+		table.getColumnModel().getColumn(4).setPreferredWidth(120);
+		table.getColumnModel().getColumn(5).setPreferredWidth(129);
+		table.getColumnModel().getColumn(6).setPreferredWidth(123);
+		table.getColumnModel().getColumn(7).setPreferredWidth(114);
+		table.getColumnModel().getColumn(8).setPreferredWidth(90);
+		table.getColumnModel().getColumn(9).setPreferredWidth(205);
 		
-		JComboBox cbbSXLuong = new JComboBox();
+		JComboBox cbbSort1 = new JComboBox();
+		cbbSort1.setModel(new DefaultComboBoxModel(new String[] {"Ti\u00EAu \u0111\u1EC1", "H\u00ECnh th\u1EE9c", "Ng\u00E0nh ngh\u1EC1", "L\u01B0\u01A1ng", "Kinh nghi\u1EC7m", "Ng\u00E0y h\u1EBFt h\u1EA1n"}));
 		
 		JComboBox cbbSXGioLam = new JComboBox();
+		cbbSXGioLam.setModel(new DefaultComboBoxModel(new String[] {"T\u0103ng d\u1EA7n", "Gi\u1EA3m d\u1EA7n"}));
 		
-		JComboBox comboBox_3 = new JComboBox();
-		
-		JButton btnSapxep = new JButton("S\u1EAFp x\u1EBFp");
+		JButton btnSapxep = new JButton("Refresh ");
+		btnSapxep.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ShowViecLam(BLL_Timviec.Instance().GetListViecLam(1));
+			}
+		});
 		btnSapxep.setForeground(SystemColor.desktop);
 		btnSapxep.setBackground(new Color(220, 20, 60));
 		btnSapxep.setBorder(null);
 		btnSapxep.setFont(new Font("Calibri", Font.BOLD, 19));
 		
-		JComboBox comboBox_3_1 = new JComboBox();
+		JButton btnSapxep_1 = new JButton("S\u1EAFp x\u1EBFp");
+		btnSapxep_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int cv = cbbSort1.getSelectedIndex();
+				if(cbbSXGioLam.getSelectedIndex() == 0)
+				{
+					ShowViecLam(BLL_Timviec.Instance().Sort(cv, txtTimkiemNC.getText(), 
+							(String)cbbHinhThuc.getSelectedItem(), (String)cbbnganhnghe2.getSelectedItem(), 
+							(String)cbbGioitinh.getSelectedItem(), (String)cbbKinhNghiem.getSelectedItem(), 
+							(String)cbbLuong.getSelectedItem(), (String)cbbTinh.getSelectedItem(), 1));
+				}
+				else
+				{
+					ArrayList<ViecLam> l = BLL_Timviec.Instance().Sort(cv, txtTimkiemNC.getText(), 
+							(String)cbbHinhThuc.getSelectedItem(), (String)cbbnganhnghe2.getSelectedItem(), 
+							(String)cbbGioitinh.getSelectedItem(), (String)cbbKinhNghiem.getSelectedItem(), 
+							(String)cbbLuong.getSelectedItem(), (String)cbbTinh.getSelectedItem(), 1);
+					Collections.reverse(l);
+					ShowViecLam(l);
+				}
+			}
+		});
+		btnSapxep_1.setForeground(Color.BLACK);
+		btnSapxep_1.setFont(new Font("Calibri", Font.BOLD, 19));
+		btnSapxep_1.setBorder(null);
+		btnSapxep_1.setBackground(new Color(220, 20, 60));
 		GroupLayout gl_panel_3 = new GroupLayout(panel_3);
 		gl_panel_3.setHorizontalGroup(
 			gl_panel_3.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_3.createSequentialGroup()
-					.addComponent(cbbSXPhobien, 0, 140, Short.MAX_VALUE)
-					.addGap(4)
-					.addComponent(cbbSXLuong, 0, 140, Short.MAX_VALUE)
-					.addGap(3)
-					.addComponent(cbbSXGioLam, 0, 140, Short.MAX_VALUE)
-					.addGap(3)
-					.addComponent(comboBox_3, 0, 140, Short.MAX_VALUE)
-					.addGap(5)
-					.addComponent(comboBox_3_1, 0, 140, Short.MAX_VALUE)
-					.addGap(22)
-					.addComponent(btnSapxep, GroupLayout.PREFERRED_SIZE, 112, GroupLayout.PREFERRED_SIZE))
+					.addComponent(btnSapxep_1, GroupLayout.PREFERRED_SIZE, 112, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(cbbSort1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(cbbSXGioLam, GroupLayout.PREFERRED_SIZE, 96, GroupLayout.PREFERRED_SIZE)
+					.addGap(48)
+					.addComponent(btnSapxep, GroupLayout.PREFERRED_SIZE, 112, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(378, Short.MAX_VALUE))
 		);
 		gl_panel_3.setVerticalGroup(
 			gl_panel_3.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_3.createSequentialGroup()
-					.addGap(11)
-					.addComponent(cbbSXPhobien, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-				.addGroup(gl_panel_3.createSequentialGroup()
-					.addGap(11)
-					.addComponent(cbbSXLuong, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-				.addGroup(gl_panel_3.createSequentialGroup()
-					.addGap(11)
-					.addComponent(cbbSXGioLam, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-				.addGroup(gl_panel_3.createSequentialGroup()
-					.addGap(11)
-					.addComponent(comboBox_3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-				.addGroup(gl_panel_3.createSequentialGroup()
-					.addGap(11)
-					.addComponent(comboBox_3_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-				.addGroup(gl_panel_3.createSequentialGroup()
 					.addGap(1)
-					.addComponent(btnSapxep, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE))
+					.addGroup(gl_panel_3.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnSapxep_1, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE)
+						.addComponent(cbbSort1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(cbbSXGioLam, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnSapxep, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap())
 		);
 		panel_3.setLayout(gl_panel_3);
 		panel_5.setLayout(gl_panel_5);
@@ -573,8 +672,9 @@ public class OverviewFrame {
 				.addGroup(groupLayout.createSequentialGroup()
 					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE)
 					.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE)
-					.addGap(5)
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 493, Short.MAX_VALUE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE)
+					.addContainerGap())
 		);
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
@@ -585,25 +685,32 @@ public class OverviewFrame {
 					.addGap(10)
 					.addComponent(lbTitle, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)
 					.addGap(86)
-					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
+					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_panel.createSequentialGroup()
 							.addGap(216)
 							.addComponent(lbHotLine, GroupLayout.PREFERRED_SIZE, 425, GroupLayout.PREFERRED_SIZE)
 							.addGap(1))
-						.addGroup(gl_panel.createSequentialGroup()
-							.addComponent(lbTimKiem, GroupLayout.PREFERRED_SIZE, 217, GroupLayout.PREFERRED_SIZE)
-							.addGap(10)
-							.addComponent(lbNganhNghe, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
-							.addGap(11)
-							.addComponent(lbTinhThanh, GroupLayout.PREFERRED_SIZE, 153, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_panel.createSequentialGroup()
-							.addComponent(txtTimKiem, GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
-							.addGap(9)
-							.addComponent(cbbNganhNghe, 0, 152, Short.MAX_VALUE)
-							.addGap(11)
-							.addComponent(cbbTinhThanh, 0, 152, Short.MAX_VALUE)
-							.addGap(10)
-							.addComponent(btnTim, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)))
+						.addGroup(Alignment.LEADING, gl_panel.createSequentialGroup()
+							.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
+								.addGroup(gl_panel.createSequentialGroup()
+									.addComponent(txtTimKiem, GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
+									.addGap(9))
+								.addGroup(Alignment.LEADING, gl_panel.createSequentialGroup()
+									.addComponent(lbTimKiem, GroupLayout.PREFERRED_SIZE, 217, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.UNRELATED)))
+							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panel.createSequentialGroup()
+									.addComponent(cbbNganhNghe, 0, 177, Short.MAX_VALUE)
+									.addGap(11))
+								.addGroup(gl_panel.createSequentialGroup()
+									.addComponent(lbNganhNghe, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)))
+							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panel.createSequentialGroup()
+									.addComponent(cbbTinhThanh, 0, 128, Short.MAX_VALUE)
+									.addGap(10)
+									.addComponent(btnTim, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE))
+								.addComponent(lbTinhThanh, GroupLayout.PREFERRED_SIZE, 153, GroupLayout.PREFERRED_SIZE))))
 					.addGap(20))
 		);
 		gl_panel.setVerticalGroup(
@@ -618,10 +725,10 @@ public class OverviewFrame {
 					.addGap(11)
 					.addComponent(lbHotLine)
 					.addGap(1)
-					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addComponent(lbTimKiem, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
+					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lbTinhThanh, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lbNganhNghe, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lbTinhThanh, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
+						.addComponent(lbTimKiem, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
 					.addGap(2)
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
 						.addComponent(txtTimKiem, GroupLayout.PREFERRED_SIZE, 39, GroupLayout.PREFERRED_SIZE)
