@@ -62,8 +62,8 @@ public class MainFrame {
 
 	private JFrame MainFrame;
 	private JTextField txtTimkiemNC;
-	private JTable table;
 	private DefaultTableModel model;
+	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -461,49 +461,6 @@ public class MainFrame {
 		panel_2.add(btnTimkiemhs);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		JPanel panel_4 = new JPanel();
-		scrollPane_1.setColumnHeaderView(panel_4);
-		panel_4.setLayout(new BorderLayout(0, 0));
-		
-		table = new JTable();
-		table.addMouseListener(new MouseAdapter() {
-			
-			public void mousePressed(MouseEvent e)
-			{
-				if(e.getClickCount() == 2)
-				{
-					int id = (int) table.getValueAt(table.getSelectedRow(), 0);
-					DetailFrame dt = new DetailFrame(id, 1);
-				}
-			}
-		});
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"Id", "Ti\u00EAu \u0111\u1EC1", "H\u00ECnh th\u1EE9c", "Ng\u00E0nh ngh\u1EC1", "Gi\u01A1i t\u00EDnh", "Kinh nghi\u1EC7m", "L\u01B0\u01A1ng", "\u0110\u1ECBa ch\u1EC9", "Ng\u00E0y h\u1EBFt h\u1EA1n", "T\u00EAn c\u00F4ng ty"
-			}
-		) {
-			boolean[] columnEditables = new boolean[] {
-				false, false, false, false, false, false, false, false, false, false
-			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
-		table.getColumnModel().getColumn(0).setPreferredWidth(0);
-		table.getColumnModel().getColumn(0).setMinWidth(0);
-		table.getColumnModel().getColumn(0).setMaxWidth(0);
-		table.getColumnModel().getColumn(1).setPreferredWidth(215);
-		table.getColumnModel().getColumn(2).setPreferredWidth(128);
-		table.getColumnModel().getColumn(3).setPreferredWidth(133);
-		table.getColumnModel().getColumn(4).setPreferredWidth(120);
-		table.getColumnModel().getColumn(5).setPreferredWidth(129);
-		table.getColumnModel().getColumn(6).setPreferredWidth(123);
-		table.getColumnModel().getColumn(7).setPreferredWidth(114);
-		table.getColumnModel().getColumn(8).setPreferredWidth(90);
-		table.getColumnModel().getColumn(9).setPreferredWidth(205);
-		panel_4.add(table, BorderLayout.NORTH);
 		GroupLayout gl_panel_5 = new GroupLayout(panel_5);
 		gl_panel_5.setHorizontalGroup(
 			gl_panel_5.createParallelGroup(Alignment.LEADING)
@@ -548,6 +505,46 @@ public class MainFrame {
 						.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE)
 						.addComponent(panel_3_1, GroupLayout.PREFERRED_SIZE, 486, GroupLayout.PREFERRED_SIZE)))
 		);
+		
+		table = new JTable();
+		scrollPane_1.setViewportView(table);
+table.addMouseListener(new MouseAdapter() {
+			
+			public void mousePressed(MouseEvent e)
+			{
+				if(e.getClickCount() == 2)
+				{
+					int id = (int) table.getValueAt(table.getSelectedRow(), 0);
+					DetailFrame dt = new DetailFrame(id, 1);
+				}
+			}
+		});
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Id", "Ti\u00EAu \u0111\u1EC1", "H\u00ECnh th\u1EE9c", "Ng\u00E0nh ngh\u1EC1", "Gi\u01A1i t\u00EDnh", "Kinh nghi\u1EC7m", "L\u01B0\u01A1ng", "\u0110\u1ECBa ch\u1EC9", "Ng\u00E0y h\u1EBFt h\u1EA1n", "T\u00EAn c\u00F4ng ty"
+			}
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, false, false, false, false, false, false, false, false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		table.getColumnModel().getColumn(0).setPreferredWidth(0);
+		table.getColumnModel().getColumn(0).setMinWidth(0);
+		table.getColumnModel().getColumn(0).setMaxWidth(0);
+		table.getColumnModel().getColumn(1).setPreferredWidth(215);
+		table.getColumnModel().getColumn(2).setPreferredWidth(128);
+		table.getColumnModel().getColumn(3).setPreferredWidth(133);
+		table.getColumnModel().getColumn(4).setPreferredWidth(120);
+		table.getColumnModel().getColumn(5).setPreferredWidth(129);
+		table.getColumnModel().getColumn(6).setPreferredWidth(123);
+		table.getColumnModel().getColumn(7).setPreferredWidth(114);
+		table.getColumnModel().getColumn(8).setPreferredWidth(90);
+		table.getColumnModel().getColumn(9).setPreferredWidth(205);
 		
 		JButton btnRefresh = new JButton("Refresh");
 		btnRefresh.addActionListener(new ActionListener() {

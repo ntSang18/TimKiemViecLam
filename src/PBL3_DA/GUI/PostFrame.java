@@ -275,6 +275,7 @@ public class PostFrame {
 					v.SetTrinhDo((String)cbbtrinhdo.getSelectedItem());
 					BLL_Timviec.Instance().AddViecLam(v);
 					JOptionPane.showMessageDialog(frmTuynDng, "Đăng thành công!!!");
+					frmTuynDng.setVisible(false);
 				} catch (Exception e2) {
 					JOptionPane.showMessageDialog(frmTuynDng, "LỖI!!!, Vui lòng kiểm tra lại");
 				}
