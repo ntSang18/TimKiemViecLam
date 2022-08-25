@@ -39,7 +39,6 @@ import javax.swing.table.TableModel;
 
 import PBL3_DA.BLL.BLL_Timviec;
 import PBL3_DA.DAL.DBHelper;
-import PBL3_DA.DTO.DiaChi;
 import PBL3_DA.DTO.ViecLam;
 
 import javax.swing.JScrollPane;
@@ -64,27 +63,14 @@ public class MainFrame {
 	private JTextField txtTimkiemNC;
 	private DefaultTableModel model;
 	private JTable table;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MainFrame window = new MainFrame();
-					window.MainFrame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
+	private static int iddangdung;
 	/**
 	 * Create the application.
 	 */
-	public MainFrame() {
+	public MainFrame(int id) 
+	{
+		iddangdung = id;
+		//System.out.println(iddangdung);
 		initialize();
 		model = (DefaultTableModel) table.getModel();
 		ShowViecLam(BLL_Timviec.Instance().GetListViecLam(1));
@@ -98,9 +84,8 @@ public class MainFrame {
 			model.fireTableDataChanged();
 			for (ViecLam i : l) 
 			{
-				DiaChi a = BLL_Timviec.Instance().GetDiaChiById(i.GetIdDC());
 				model.addRow(new Object[] {
-						i.GetId(), i.GetTieuDe(), i.GetHinhThuc(), i.GetNganhNghe(), i.GetGioiTinhTuyen(), i.GetKinhNghiemTuyen(), i.GetLuongCoBan(), a.GetTinh(), i.GetNgayHetHan(), i.GetTenCT() 
+						i.GetId(), i.GetTieuDe(), i.GetHinhThuc(), i.GetNganhNghe(), i.GetGioiTinhTuyen(), i.GetKinhNghiemTuyen(), i.GetLuongCoBan(), i.GetTinh(), i.GetNgayHetHan(), i.GetTenCT() 
 				});
 			}
 		} catch (Exception e) {
@@ -115,6 +100,7 @@ public class MainFrame {
 		MainFrame = new JFrame("Finding Job Application");
 		MainFrame.getContentPane().setBackground(new Color(230, 230, 250));
 		MainFrame.setBounds(100, 100, 1080, 697);
+		MainFrame.setVisible(true);
 		MainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		// Panel1
@@ -279,6 +265,11 @@ public class MainFrame {
 		
 		ImageIcon TaoHoSoIcon = new ImageIcon("C:\\Users\\minht\\Java\\PBL3_DA\\src\\PBL3_DA\\IMAGE\\red_file_50px.png");
 		JButton btnTaohs = new JButton("T\u1EA1o h\u1ED3 s\u01A1", TaoHoSoIcon);
+		btnTaohs.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FileFrame FF = new FileFrame(iddangdung);
+			}
+		});
 		btnTaohs.setBackground(new Color(51, 102, 204));
 		btnTaohs.setBorder(null);
 		btnTaohs.setForeground(Color.WHITE);
@@ -288,7 +279,7 @@ public class MainFrame {
 		JButton btnDangTin = new JButton("\u0110\u0103ng tin \r\ntuy\u1EC3n d\u1EE5ng", DangTinTDIcon);
 		btnDangTin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				PostFrame PF = new PostFrame();
+				PostFrame PF = new PostFrame(iddangdung);
 			}
 		});
 		btnDangTin.setBackground(new Color(51, 102, 204));
@@ -298,6 +289,13 @@ public class MainFrame {
 		
 		ImageIcon DangNhapIcon = new ImageIcon("C:\\Users\\minht\\Java\\PBL3_DA\\src\\PBL3_DA\\IMAGE\\enter_30px.png");
 		JButton btnDangXuat = new JButton("\u0110\u0103ng xu\u1EA5t", DangNhapIcon);
+		btnDangXuat.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				OverviewFrame OF = new OverviewFrame();
+				OF.Open();
+				MainFrame.dispose();
+			}
+		});
 		btnDangXuat.setBackground(new Color(51, 102, 204));
 		btnDangXuat.setBorder(null);
 		btnDangXuat.setForeground(new Color(255, 255, 255));
@@ -315,6 +313,11 @@ public class MainFrame {
 		
 		ImageIcon TuhosoIcon = new ImageIcon("C:\\Users\\minht\\Java\\PBL3_DA\\src\\PBL3_DA\\IMAGE\\document_28px.png");
 		JButton btnTuhs = new JButton("T\u1EE7 h\u1ED3 s\u01A1", TuhosoIcon);
+		btnTuhs.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FileFrame FF = new FileFrame(iddangdung);
+			}
+		});
 		btnTuhs.setBounds(0, 0, 121, 45);
 		btnTuhs.setFont(new Font("Calibri", Font.BOLD, 15));
 		btnTuhs.setBorder(null);
@@ -324,7 +327,7 @@ public class MainFrame {
 		JButton btnVLDaluu = new JButton("Vi\u1EC7c l\u00E0m \u0111\u00E3 l\u01B0u", DaluuIcon);
 		btnVLDaluu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SaveFrame save = new SaveFrame();
+				SaveFrame save = new SaveFrame(iddangdung);
 				save.setVisible(true);
 			}
 		});
@@ -400,6 +403,12 @@ public class MainFrame {
 		btTimKiem.setBackground(Color.RED);
 		
 		JButton btnTimkiemhs = new JButton("T\u00ECm h\u1ED3 s\u01A1", null);
+		btnTimkiemhs.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FindFileFrame FF = new FindFileFrame();
+				FF.setVisible(true);
+			}
+		});
 		btnTimkiemhs.setBounds(131, 0, 121, 45);
 		btnTimkiemhs.setFont(new Font("Calibri", Font.BOLD, 15));
 		btnTimkiemhs.setBorder(null);
@@ -515,7 +524,7 @@ table.addMouseListener(new MouseAdapter() {
 				if(e.getClickCount() == 2)
 				{
 					int id = (int) table.getValueAt(table.getSelectedRow(), 0);
-					DetailFrame dt = new DetailFrame(id, 1);
+					DetailFrame dt = new DetailFrame(iddangdung, id, 1);
 				}
 			}
 		});

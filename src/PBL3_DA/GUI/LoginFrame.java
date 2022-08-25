@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
@@ -16,32 +18,22 @@ import java.awt.Color;
 import java.awt.SystemColor;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+
+import PBL3_DA.BLL.BLL_Timviec;
+import PBL3_DA.DTO.TaiKhoan;
+
 import javax.swing.border.BevelBorder;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
+import javax.swing.JPasswordField;
 
 public class LoginFrame {
 
 	private JFrame LoginFrame;
-	private JTextField txtDangnhap;
-	private JTextField txtMatkhau;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoginFrame window = new LoginFrame();
-					window.LoginFrame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
+	private JTextField txtEmail;
+	private JPasswordField pass;
 	/**
 	 * Create the application.
 	 */
@@ -57,7 +49,8 @@ public class LoginFrame {
 		LoginFrame.setResizable(false);
 		LoginFrame.setTitle("\u0110\u0102NG NH\u1EACP");
 		LoginFrame.setBounds(100, 100, 450, 325);
-		LoginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		LoginFrame.setVisible(true);
+		//LoginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		LoginFrame.getContentPane().setLayout(null);
 		
 		JPanel panel = new JPanel();
@@ -83,19 +76,38 @@ public class LoginFrame {
 		lbMatkhau.setBounds(28, 192, 85, 20);
 		panel.add(lbMatkhau);
 		
-		txtDangnhap = new JTextField();
-		txtDangnhap.setBounds(135, 140, 246, 30);
-		panel.add(txtDangnhap);
-		txtDangnhap.setColumns(10);
-		
-		txtMatkhau = new JTextField();
-		txtMatkhau.setColumns(10);
-		txtMatkhau.setBounds(135, 182, 246, 30);
-		panel.add(txtMatkhau);
+		txtEmail = new JTextField();
+		txtEmail.setBounds(135, 140, 246, 30);
+		panel.add(txtEmail);
+		txtEmail.setColumns(10);
 		
 		JButton btnDangnhap = new JButton("\u0110\u0103ng nh\u1EADp");
 		btnDangnhap.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				try 
+				{
+					if(BLL_Timviec.Instance().CheckTaiKhoan(txtEmail.getText(), pass.getText()) == true)
+					{
+						if(BLL_Timviec.Instance().CheckTaiKhoanType(txtEmail.getText(), pass.getText()) == true)
+						{
+							int id = BLL_Timviec.Instance().GetIdTaiKhoanByEmail(txtEmail.getText());
+							AdminFrame AF = new AdminFrame(id);
+							LoginFrame.setVisible(false);
+						}
+						else
+						{
+							int id = BLL_Timviec.Instance().GetIdTaiKhoanByEmail(txtEmail.getText());
+							MainFrame MF = new MainFrame(id);
+							LoginFrame.setVisible(false);
+						}
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(LoginFrame, "Email hoăc mật khẩu chưa chính xác");
+					}
+				} catch (Exception e2) {
+					
+				}
 			}
 		});
 		btnDangnhap.setForeground(SystemColor.desktop);
@@ -106,6 +118,13 @@ public class LoginFrame {
 		panel.add(btnDangnhap);
 		
 		JButton btnThoat = new JButton("Tho\u00E1t");
+		btnThoat.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				OverviewFrame OF = new OverviewFrame();
+				OF.Open();
+				LoginFrame.setVisible(false);
+			}
+		});
 		btnThoat.setBackground(new Color(230, 230, 250));
 		btnThoat.setForeground(new Color(220, 20, 60));
 		btnThoat.setBorder(null);
@@ -117,5 +136,17 @@ public class LoginFrame {
 		JLabel lbIcon = new JLabel(LoginIcon);
 		lbIcon.setBounds(173, 11, 67, 80);
 		panel.add(lbIcon);
+		
+		pass = new JPasswordField();
+		pass.setBounds(135, 186, 246, 29);
+		panel.add(pass);
+		LoginFrame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e)
+			{
+				OverviewFrame OF = new OverviewFrame();
+				OF.Open();
+				LoginFrame.setVisible(false);
+			}
+		});
 	}
 }

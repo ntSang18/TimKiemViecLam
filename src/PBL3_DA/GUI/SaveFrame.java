@@ -11,7 +11,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import PBL3_DA.BLL.BLL_Timviec;
-import PBL3_DA.DTO.DiaChi;
 import PBL3_DA.DTO.ViecLam;
 
 import javax.swing.JLabel;
@@ -37,15 +36,16 @@ public class SaveFrame extends JFrame {
 	private JTextField txtSearch;
 	private JTable table;
 	private DefaultTableModel model;
-	private int iduser;
+	private static int iddangdung;
 	/**
 	 * Create the frame.
 	 */
-	public SaveFrame() {
+	public SaveFrame(int id) 
+	{
+		iddangdung= id;
 		initialize();
 		model = (DefaultTableModel) table.getModel();
-		iduser = 1;
-		ShowViecLam(BLL_Timviec.Instance().GetListViecLamLuu(iduser));
+		ShowViecLam(BLL_Timviec.Instance().GetListViecLamLuu(iddangdung));
 	}
 	
 	public void ShowViecLam(ArrayList<ViecLam> l)
@@ -56,9 +56,8 @@ public class SaveFrame extends JFrame {
 			model.fireTableDataChanged();
 			for (ViecLam i : l) 
 			{
-				DiaChi a = BLL_Timviec.Instance().GetDiaChiById(i.GetIdDC());
 				model.addRow(new Object[] {
-						i.GetId(), i.GetTieuDe(), i.GetHinhThuc(), i.GetNganhNghe(), i.GetGioiTinhTuyen(), i.GetKinhNghiemTuyen(), i.GetLuongCoBan(), a.GetTinh(), i.GetNgayHetHan(), i.GetTenCT() 
+						i.GetId(), i.GetTieuDe(), i.GetHinhThuc(), i.GetNganhNghe(), i.GetGioiTinhTuyen(), i.GetKinhNghiemTuyen(), i.GetLuongCoBan(), i.GetTinh(), i.GetNgayHetHan(), i.GetTenCT() 
 				});
 			}
 		} catch (Exception e) {
@@ -106,7 +105,7 @@ public class SaveFrame extends JFrame {
 				if(e.getClickCount() == 2)
 				{
 					int id = (int) table.getValueAt(table.getSelectedRow(), 0);
-					DetailFrame dt = new DetailFrame(id, 1);
+					DetailFrame dt = new DetailFrame(iddangdung, id, 1);
 				}
 			}
 		});
@@ -152,7 +151,7 @@ public class SaveFrame extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int cv = comboBox.getSelectedIndex();
-				ShowViecLam(BLL_Timviec.Instance().SortByTxtUser(cv, txtSearch.getText(), iduser));
+				ShowViecLam(BLL_Timviec.Instance().SortByTxtUser(cv, txtSearch.getText(), iddangdung));
 			}
 		});
 		btnNewButton.setBounds(10, 52, 89, 30);
@@ -169,7 +168,7 @@ public class SaveFrame extends JFrame {
 		btnRefresh.setBorder(null);
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ShowViecLam(BLL_Timviec.Instance().GetListViecLamLuu(iduser));
+				ShowViecLam(BLL_Timviec.Instance().GetListViecLamLuu(iddangdung));
 			}
 		});
 		btnRefresh.setBounds(10, 93, 240, 30);
@@ -182,8 +181,8 @@ public class SaveFrame extends JFrame {
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int idcv = (int) table.getValueAt(table.getSelectedRow(), 0);
-				BLL_Timviec.Instance().DeleteViecLamLuu(1, idcv);
-				ShowViecLam(BLL_Timviec.Instance().GetListViecLamLuu(iduser));
+				BLL_Timviec.Instance().DeleteViecLamLuu(iddangdung, idcv);
+				ShowViecLam(BLL_Timviec.Instance().GetListViecLamLuu(iddangdung));
 			}
 		});
 		btnDelete.setBounds(10, 134, 240, 30);
@@ -195,7 +194,7 @@ public class SaveFrame extends JFrame {
 		btnNewButton_2_1.setBorder(null);
 		btnNewButton_2_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ShowViecLam(BLL_Timviec.Instance().SearchByTxtUser(txtSearch.getText(), iduser));
+				ShowViecLam(BLL_Timviec.Instance().SearchByTxtUser(txtSearch.getText(), iddangdung));
 			}
 		});
 		btnNewButton_2_1.setBounds(10, 11, 89, 30);

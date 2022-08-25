@@ -9,10 +9,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import PBL3_DA.BLL.BLL_Timviec;
-import PBL3_DA.DTO.DiaChi;
 import PBL3_DA.DTO.ViecLam;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -26,18 +27,21 @@ import javax.swing.JComboBox;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.DefaultComboBoxModel;
 
 public class ManageFrame extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
 	private DefaultTableModel model;
+	private static int iddangdung;
 
 	/**
 	 * Create the frame.
 	 */
-	public ManageFrame() 
+	public ManageFrame(int id) 
 	{
+		iddangdung = id;
 		initalize();
 		model = (DefaultTableModel) table.getModel();
 		ShowViecLam(BLL_Timviec.Instance().GetListViecLam(0));
@@ -51,9 +55,8 @@ public class ManageFrame extends JFrame {
 			model.fireTableDataChanged();
 			for (ViecLam i : l) 
 			{
-				DiaChi a = BLL_Timviec.Instance().GetDiaChiById(i.GetIdDC());
 				model.addRow(new Object[] {
-						i.GetId(), i.GetTieuDe(), i.GetHinhThuc(), i.GetNganhNghe(), i.GetGioiTinhTuyen(), i.GetKinhNghiemTuyen(), i.GetLuongCoBan(), a.GetTinh(), i.GetNgayHetHan(), i.GetTenCT() 
+						i.GetId(), i.GetTieuDe(), i.GetHinhThuc(), i.GetNganhNghe(), i.GetGioiTinhTuyen(), i.GetKinhNghiemTuyen(), i.GetLuongCoBan(), i.GetTinh(), i.GetNgayHetHan(), i.GetTenCT() 
 				});
 			}
 		} catch (Exception e) {
@@ -75,6 +78,7 @@ public class ManageFrame extends JFrame {
 		contentPane.setLayout(null);
 		JTextPane txtSearch = new JTextPane();
 		JComboBox cbbSort = new JComboBox();
+		cbbSort.setModel(new DefaultComboBoxModel(new String[] {"Ti\u00EAu \u0111\u1EC1", "H\u00ECnh th\u1EE9c", "Ng\u00E0nh ngh\u1EC1", "L\u01B0\u01A1ng", "Kinh nghi\u1EC7m", "Ng\u00E0y h\u1EBFt h\u1EA1n"}));
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(70, 130, 180));
@@ -107,7 +111,7 @@ public class ManageFrame extends JFrame {
 				if(e.getClickCount() == 2)
 				{
 					int id = (int) table.getValueAt(table.getSelectedRow(), 0);
-					DetailFrame dt = new DetailFrame(id, 0);
+					DetailFrame dt = new DetailFrame(iddangdung, id, 0);
 				}
 			}
 		});

@@ -11,7 +11,6 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
 import PBL3_DA.BLL.BLL_Timviec;
-import PBL3_DA.DTO.DiaChi;
 import PBL3_DA.DTO.ViecLam;
 
 import java.awt.Color;
@@ -37,27 +36,12 @@ public class AdminFrame {
 	private JTable table;
 	private JTextField txtTimKiem;
 	private DefaultTableModel model;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AdminFrame window = new AdminFrame();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
+	private static int iddangdung;
 	/**
 	 * Create the application.
 	 */
-	public AdminFrame() {
+	public AdminFrame(int id) {
+		iddangdung = id;
 		initialize();
 		model = (DefaultTableModel) table.getModel();
 		ShowViecLam(BLL_Timviec.Instance().GetListViecLam(1));
@@ -72,9 +56,8 @@ public class AdminFrame {
 			model.fireTableDataChanged();
 			for (ViecLam i : l) 
 			{
-				DiaChi a = BLL_Timviec.Instance().GetDiaChiById(i.GetIdDC());
 				model.addRow(new Object[] {
-						i.GetId(), i.GetTieuDe(), i.GetHinhThuc(), i.GetNganhNghe(), i.GetGioiTinhTuyen(), i.GetKinhNghiemTuyen(), i.GetLuongCoBan(), a.GetTinh(), i.GetNgayHetHan(), i.GetTenCT() 
+						i.GetId(), i.GetTieuDe(), i.GetHinhThuc(), i.GetNganhNghe(), i.GetGioiTinhTuyen(), i.GetKinhNghiemTuyen(), i.GetLuongCoBan(), i.GetTinh(), i.GetNgayHetHan(), i.GetTenCT() 
 				});
 			}
 		} catch (Exception e) {
@@ -92,6 +75,7 @@ public class AdminFrame {
 		frame.setType(Type.UTILITY);
 		frame.setBounds(100, 100, 1000, 552);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
 		frame.getContentPane().setLayout(null);
 		JComboBox CbbSort1 = new JComboBox();
 		JComboBox CbbSort2 = new JComboBox();
@@ -126,7 +110,7 @@ public class AdminFrame {
 		JButton btnQunTrCng = new JButton("Qu\u1EA3n tr\u1ECB c\u00F4ng vi\u1EC7c");
 		btnQunTrCng.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ManageFrame mng = new ManageFrame();
+				ManageFrame mng = new ManageFrame(iddangdung);
 				mng.setVisible(true);
 			}
 		});
@@ -137,6 +121,13 @@ public class AdminFrame {
 		panel.add(btnQunTrCng);
 		
 		JButton btnQunTrCng_1_1 = new JButton("\u0110\u0103ng xu\u1EA5t");
+		btnQunTrCng_1_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				OverviewFrame OF = new OverviewFrame();
+				OF.Open();
+				frame.dispose();
+			}
+		});
 		btnQunTrCng_1_1.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnQunTrCng_1_1.setBackground(new Color(204, 204, 255));
 		btnQunTrCng_1_1.setBorder(null);
@@ -194,7 +185,7 @@ public class AdminFrame {
 				if(e.getClickCount() == 2)
 				{
 					int id = (int) table.getValueAt(table.getSelectedRow(), 0);
-					DetailFrame dt = new DetailFrame(id, 1);
+					DetailFrame dt = new DetailFrame(iddangdung, id, 1);
 				}
 			}
 		});

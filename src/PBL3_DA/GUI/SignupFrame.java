@@ -5,41 +5,35 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.border.BevelBorder;
 import java.awt.Color;
 import javax.swing.border.LineBorder;
+
+import PBL3_DA.BLL.BLL_Timviec;
+import PBL3_DA.DTO.TaiKhoan;
+
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.SystemColor;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.ActionEvent;
+import javax.swing.JPasswordField;
 
 public class SignupFrame {
 
 	private JFrame SignupFrame;
-	private JTextField txtTentaikhoan;
-	private JTextField txtMatkhau;
-	private JTextField txtNhaplaimk;
+	private JTextField txtEmail;
 	private JTextField txtHoten;
 	private JTextField txtSdt;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					SignupFrame window = new SignupFrame();
-					window.SignupFrame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
+	private JPasswordField pass;
+	private JPasswordField nhaplaipass;
 	/**
 	 * Create the application.
 	 */
@@ -55,7 +49,8 @@ public class SignupFrame {
 		SignupFrame.setTitle("\u0110\u0102NG K\u00DD");
 		SignupFrame.setResizable(false);
 		SignupFrame.setBounds(100, 100, 500, 600);
-		SignupFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//SignupFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		SignupFrame.setVisible(true);
 		SignupFrame.getContentPane().setLayout(null);
 		
 		JPanel panel = new JPanel();
@@ -75,11 +70,11 @@ public class SignupFrame {
 		panel.add(panel_1);
 		panel_1.setLayout(null);
 		
-		JLabel lbTentk = new JLabel("T\u00EAn t\u00E0i kho\u1EA3n");
-		lbTentk.setHorizontalAlignment(SwingConstants.RIGHT);
-		lbTentk.setFont(new Font("Calibri", Font.BOLD, 12));
-		lbTentk.setBounds(10, 22, 95, 22);
-		panel_1.add(lbTentk);
+		JLabel lbEmail = new JLabel("Email");
+		lbEmail.setHorizontalAlignment(SwingConstants.RIGHT);
+		lbEmail.setFont(new Font("Calibri", Font.BOLD, 12));
+		lbEmail.setBounds(10, 22, 95, 22);
+		panel_1.add(lbEmail);
 		
 		JLabel lbMatkhau = new JLabel("M\u1EADt kh\u1EA9u");
 		lbMatkhau.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -93,20 +88,18 @@ public class SignupFrame {
 		lbNhaplaimk.setBounds(10, 106, 95, 22);
 		panel_1.add(lbNhaplaimk);
 		
-		txtTentaikhoan = new JTextField();
-		txtTentaikhoan.setBounds(133, 16, 261, 30);
-		panel_1.add(txtTentaikhoan);
-		txtTentaikhoan.setColumns(10);
+		txtEmail = new JTextField();
+		txtEmail.setBounds(133, 16, 261, 30);
+		panel_1.add(txtEmail);
+		txtEmail.setColumns(10);
 		
-		txtMatkhau = new JTextField();
-		txtMatkhau.setColumns(10);
-		txtMatkhau.setBounds(133, 58, 261, 30);
-		panel_1.add(txtMatkhau);
+		pass = new JPasswordField();
+		pass.setBounds(133, 58, 261, 30);
+		panel_1.add(pass);
 		
-		txtNhaplaimk = new JTextField();
-		txtNhaplaimk.setColumns(10);
-		txtNhaplaimk.setBounds(133, 100, 261, 30);
-		panel_1.add(txtNhaplaimk);
+		nhaplaipass = new JPasswordField();
+		nhaplaipass.setBounds(133, 99, 261, 30);
+		panel_1.add(nhaplaipass);
 		
 		JLabel lbThongtintk = new JLabel("Th\u00F4ng tin t\u00E0i kho\u1EA3n");
 		lbThongtintk.setBounds(73, 166, 128, 25);
@@ -163,6 +156,46 @@ public class SignupFrame {
 		panel_2.add(txtSdt);
 		
 		JButton btnDangky = new JButton("\u0110\u0103ng k\u00FD");
+		btnDangky.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try 
+				{
+					TaiKhoan tk = new TaiKhoan();
+					tk.setEmail(txtEmail.getText());
+					tk.setPass(pass.getText());
+					tk.setUserName(txtHoten.getText());
+					tk.setSDT(Integer.valueOf(txtSdt.getText()));
+					tk.setType(0);
+					if(txtEmail.getText().trim() == "" || pass.getText().trim() == "" || txtHoten.getText().trim() == "" || 
+						BLL_Timviec.Instance().Isnumber(txtSdt.getText().trim()) == false || txtSdt.getText().trim().length() < 10 || txtSdt.getText().trim().length() > 12)
+					{
+						throw new Exception();
+					}
+					if(BLL_Timviec.Instance().CheckTaiKhoanByEmail(tk.getEmail()) == false)
+					{
+						if(nhaplaipass.getText().equals(pass.getText()))
+						{
+							BLL_Timviec.Instance().AddTaiKhoan(tk);
+							JOptionPane.showMessageDialog(SignupFrame, "Đăng ký thành công");
+							int id = BLL_Timviec.Instance().GetIdTaiKhoanByEmail(tk.getEmail());
+							MainFrame MF = new MainFrame(id);
+							SignupFrame.setVisible(false);
+						}
+						else
+						{
+							JOptionPane.showMessageDialog(SignupFrame, "Mật khẩu nhập lại không khớp");
+						}
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(SignupFrame, "Email đã tồn tại");
+					}
+				} catch (Exception e2) 
+				{
+					JOptionPane.showMessageDialog(SignupFrame, "Error");
+				}
+			}
+		});
 		btnDangky.setForeground(SystemColor.desktop);
 		btnDangky.setBackground(new Color(220, 20, 60));
 		btnDangky.setBorder(null);
@@ -174,5 +207,13 @@ public class SignupFrame {
 		JLabel lbIcon = new JLabel(SigninIcon);
 		lbIcon.setBounds(172, 11, 142, 90);
 		panel.add(lbIcon);
+		SignupFrame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e)
+			{
+				OverviewFrame OF = new OverviewFrame();
+				OF.Open();
+				SignupFrame.setVisible(false);
+			}
+		});
 	}
 }

@@ -6,6 +6,8 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.SystemColor;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +48,6 @@ import javax.swing.text.TableView.TableRow;
 
 
 import PBL3_DA.BLL.BLL_Timviec;
-import PBL3_DA.DTO.DiaChi;
 import PBL3_DA.DTO.ViecLam;
 
 import javax.swing.JScrollPane;
@@ -64,28 +65,12 @@ public class OverviewFrame {
 	private JTextField txtTimkiemNC;
 	private JTable table;
 	private DefaultTableModel model;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					OverviewFrame window = new OverviewFrame();
-					window.MainFrame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
 	/**
 	 * Create the application.
 	 */
 	public OverviewFrame() {
 		initialize();
+		//Open();
 		model = (DefaultTableModel) table.getModel();
 		ShowViecLam(BLL_Timviec.Instance().GetListViecLam(1));
 	}
@@ -98,23 +83,24 @@ public class OverviewFrame {
 			model.fireTableDataChanged();
 			for (ViecLam i : l) 
 			{
-				DiaChi a = BLL_Timviec.Instance().GetDiaChiById(i.GetIdDC());
 				model.addRow(new Object[] {
-						i.GetId(), i.GetTieuDe(), i.GetHinhThuc(), i.GetNganhNghe(), i.GetGioiTinhTuyen(), i.GetKinhNghiemTuyen(), i.GetLuongCoBan(), a.GetTinh(), i.GetNgayHetHan(), i.GetTenCT() 
+						i.GetId(), i.GetTieuDe(), i.GetHinhThuc(), i.GetNganhNghe(), i.GetGioiTinhTuyen(), i.GetKinhNghiemTuyen(), i.GetLuongCoBan(), i.GetTinh(), i.GetNgayHetHan(), i.GetTenCT() 
 				});
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
+	public void Open()
+	{
+		MainFrame.setVisible(true);
+	}
+	
 	private void initialize() {
 		MainFrame = new JFrame("Finding Job Application");
 		MainFrame.getContentPane().setBackground(new Color(230, 230, 250));
 		MainFrame.setBounds(100, 100, 1080, 697);
+		//MainFrame.setVisible(true);
 		MainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		// Panel1
@@ -311,6 +297,11 @@ public class OverviewFrame {
 		
 		ImageIcon TaoHoSoIcon = new ImageIcon("C:\\Users\\minht\\Java\\PBL3_DA\\src\\PBL3_DA\\IMAGE\\red_file_50px.png");
 		JButton btnTaohs = new JButton("T\u1EA1o h\u1ED3 s\u01A1", TaoHoSoIcon);
+		btnTaohs.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(MainFrame, "Bạn cần phải đăng nhập để sử dụng chức năng này");
+			}
+		});
 		btnTaohs.setBackground(new Color(51, 102, 204));
 		btnTaohs.setBorder(null);
 		btnTaohs.setForeground(Color.WHITE);
@@ -318,6 +309,11 @@ public class OverviewFrame {
 		
 		ImageIcon DangTinTDIcon = new ImageIcon("C:\\Users\\minht\\Java\\PBL3_DA\\src\\PBL3_DA\\IMAGE\\paper_plane_50px.png");
 		JButton btnDangTin = new JButton("\u0110\u0103ng tin \r\ntuy\u1EC3n d\u1EE5ng", DangTinTDIcon);
+		btnDangTin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(MainFrame, "Bạn cần phải đăng nhập để sử dụng chức năng này");
+			}
+		});
 		btnDangTin.setBackground(new Color(51, 102, 204));
 		btnDangTin.setBorder(null);
 		btnDangTin.setForeground(new Color(255, 255, 255));
@@ -325,6 +321,12 @@ public class OverviewFrame {
 		
 		ImageIcon DangNhapIcon = new ImageIcon("C:\\Users\\minht\\Java\\PBL3_DA\\src\\PBL3_DA\\IMAGE\\enter_30px.png");
 		JButton btnDangnhap = new JButton("\u0110\u0103ng nh\u1EADp", DangNhapIcon);
+		btnDangnhap.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				LoginFrame LF = new LoginFrame();
+				MainFrame.setVisible(false);
+			}
+		});
 		btnDangnhap.setBackground(new Color(51, 102, 204));
 		btnDangnhap.setBorder(null);
 		btnDangnhap.setForeground(new Color(255, 255, 255));
@@ -332,6 +334,12 @@ public class OverviewFrame {
 		
 		ImageIcon DangKyIcon = new ImageIcon("C:\\Users\\minht\\Java\\PBL3_DA\\src\\PBL3_DA\\IMAGE\\registration_30px.png");
 		JButton btnDangky = new JButton("\u0110\u0103ng k\u00FD", DangKyIcon);
+		btnDangky.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SignupFrame SF = new SignupFrame();
+				MainFrame.setVisible(false);
+			}
+		});
 		btnDangky.setBackground(new Color(51, 102, 204));
 		btnDangky.setBorder(null);
 		btnDangky.setForeground(new Color(255, 255, 255));
@@ -342,12 +350,22 @@ public class OverviewFrame {
 		
 		ImageIcon TuhosoIcon = new ImageIcon("C:\\Users\\minht\\Java\\PBL3_DA\\src\\PBL3_DA\\IMAGE\\document_28px.png");
 		JButton btnTuhs = new JButton("T\u1EE7 h\u1ED3 s\u01A1", TuhosoIcon);
+		btnTuhs.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(MainFrame, "Bạn cần phải đăng nhập để sử dụng chức năng này");
+			}
+		});
 		btnTuhs.setFont(new Font("Calibri", Font.BOLD, 15));
 		btnTuhs.setBorder(null);
 		btnTuhs.setBackground(new Color(135, 206, 250));
 		
 		ImageIcon DaluuIcon = new ImageIcon("D:\\HP\\Pictures\\Saved Pictures\\download_30px.png");
 		JButton btnVLDaluu = new JButton("Vi\u1EC7c l\u00E0m \u0111\u00E3 l\u01B0u", DaluuIcon);
+		btnVLDaluu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(MainFrame, "Bạn cần phải đăng nhập để sử dụng chức năng này");
+			}
+		});
 		btnVLDaluu.setFont(new Font("Calibri", Font.BOLD, 15));
 		btnVLDaluu.setBorder(null);
 		btnVLDaluu.setBackground(new Color(135, 206, 250));
@@ -366,6 +384,11 @@ public class OverviewFrame {
 		
 		ImageIcon TaikhoanIcon = new ImageIcon("C:\\Users\\minht\\Java\\PBL3_DA\\src\\PBL3_DA\\IMAGE\\user_30px.png");
 		JButton btnTaikhoan = new JButton("T\u00E0i kho\u1EA3n", TaikhoanIcon);
+		btnTaikhoan.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(MainFrame, "Bạn cần phải đăng nhập để sử dụng chức năng này");
+			}
+		});
 		btnTaikhoan.setFont(new Font("Calibri", Font.BOLD, 15));
 		btnTaikhoan.setBorder(null);
 		btnTaikhoan.setBackground(new Color(135, 206, 250));

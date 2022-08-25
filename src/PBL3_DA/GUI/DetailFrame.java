@@ -20,7 +20,6 @@ import com.toedter.calendar.JDateChooser;
 
 import PBL3_DA.BLL.BLL_Timviec;
 import PBL3_DA.DAL.DBHelper;
-import PBL3_DA.DTO.DiaChi;
 import PBL3_DA.DTO.ViecLam;
 
 import javax.swing.JButton;
@@ -42,8 +41,8 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class DetailFrame {
 
-	private int iduser;
-	private int idcv;
+	private static int iduser;
+	private static int idcv;
 	private JFrame frmTuynDng;
 	private JTextField textTieuDe;
 	private JTextField textSoLuongTuyen;
@@ -68,11 +67,11 @@ public class DetailFrame {
 	/**
 	 * Create the application.
 	 */
-	public DetailFrame(int id, int trangthai) {
+	public DetailFrame(int idu, int idc, int trangthai) {
+		idcv = idc;
+		iduser = idu;
 		initialize();
-		SetForm(id, trangthai);
-		idcv = id;
-		iduser = 1;
+		SetForm(idc, trangthai);
 	}
 	
 	public void SetForm(int id, int trangthai)
@@ -91,11 +90,10 @@ public class DetailFrame {
 		cbbLuongcoban.setSelectedItem(v.GetLuongCoBan());
 		DateHetHan.setDate(v.GetNgayHetHan());
 		textTenCT.setText(v.GetTenCT());
-		DiaChi d = BLL_Timviec.Instance().GetDiaChiById(v.GetIdDC());
-		textDC.setText(d.GetDCCT());
+		textDC.setText(v.GetDCCT());
 		textSDT.setText(String.valueOf(v.GetSDT()));
 		textNhanSu.setText(v.GetQuyMoNhanSu());
-		cbbTinhtp.setSelectedItem(d.GetTinh());
+		cbbTinhtp.setSelectedItem(v.GetTinh());
 		textLinhVucHD.setText(v.GetLinhVucHD());
 		txtareaSoluoc.setText(v.GetSoLuocCT());
 		cbbtrinhdo.setSelectedItem(v.GetTrinhDo());
@@ -164,14 +162,14 @@ public class DetailFrame {
 		lbLoaihinhcongviec.setFont(new Font("Tahoma", Font.BOLD, 12));
 		
 		cbbLoaihinhcv = new JComboBox();
-		cbbLoaihinhcv.setModel(new DefaultComboBoxModel(new String[] {"Giờ hành chính", "Việc làm thêm/Làm việc ngoài giờ", "Việc làm online", "Việc làm theo ca/Đổi ca", "Việc làm tự do"}));
+		cbbLoaihinhcv.setModel(new DefaultComboBoxModel(new String[] {"Giờ hành chính", "Việc làm thu nhập cao", "Việc làm thêm/Làm việc ngoài giờ", "Thầu dự án/Freelance/Việc làm tự do", "Việc làm online", "Kinh doanh mạng lưới", "Giúp việc gia đình", "Hợp tác lao động nước ngoài", "Việc làm người khuyết tật", "Việc làm theo ca/Đổi ca", "Việc làm cho tri thức lớn tuổi (trên 50 tuổi)"}));
 		
 		JLabel lbKinhnghiemyc = new JLabel("Kinh nghi\u1EC7m y\u00EAu c\u1EA7u");
 		lbKinhnghiemyc.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbKinhnghiemyc.setFont(new Font("Tahoma", Font.BOLD, 12));
 		
 		 cbbKinhnghiem = new JComboBox();
-		cbbKinhnghiem.setModel(new DefaultComboBoxModel(new String[] {"Không yêu cầu", "Dưới 1 năm", "Trên 1 năm", "Trên 2 năm", "Trên 3 năm"}));
+		cbbKinhnghiem.setModel(new DefaultComboBoxModel(new String[] {"Không yêu cầu", "Dưới 1 năm", "Trên 1 năm", "Trên 2 năm", "Trên 3 năm", "Trên 4 năm", "Trên 5 năm"}));
 		
 		JLabel lbThoigianthuviec = new JLabel("Th\u1EDDi gian th\u1EED vi\u1EC7c");
 		lbThoigianthuviec.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -194,7 +192,7 @@ public class DetailFrame {
 		lbNganhnghe.setFont(new Font("Tahoma", Font.BOLD, 12));
 		
 		cbbNganhnghe = new JComboBox();
-		cbbNganhnghe.setModel(new DefaultComboBoxModel(new String[] {"Bán hàng", "Tư vấn bảo hiểm", "Bất động sản", "Biên dịch/Phiên dịch", "Bưu chính viễn thông ", "Cơ khí", "Công nghệ thông tin", "Dệt may", "Bảo vệ/Vệ sĩ/An ninh", "Chăm sóc khách hàng", "Du lịch/Nhà hàng/Khách sạn", "Giáo dục/Đào tạo/Thư viện "}));
+		cbbNganhnghe.setModel(new DefaultComboBoxModel(new String[] {"Bán hàng", "Tư vấn bảo hiểm", "Báo chí/Biên tập viên", "Bất động sản", "Biên dịch/Phiên dịch", "Bưu chính viễn thông ", "Cơ khí/Kĩ thuật ứng dụng", "Công nghệ thông tin", "Dầu khí/Địa chất", "Dệt may", "Bảo vệ/Vệ sĩ/An ninh", "Chăm sóc khách hàng", "Điện/Điện tử/Điện lạnh", "Du lịch/Nhà hàng/Khách sạn", "Dược/Hóa chất/Sinh hóa", "Giải trí/Vui chơi", "Giáo dục/Đào tạo/Thư viện", "Giao thông/Vận tải/Thủy lợi/Cầu đường", "Giày da/Thuộc gia", "Hành chính/Thư kí/Trợ lý", "Kho vận/Vật tư/Thu mua", "Kiến trúc/Nội thất", "Kinh doanh", "Lao động phổ thông", "Luật/Pháp lý", "Môi trường/Xử lý chất thải", "Mỹ phẩm/Thời trang/Trang sức", "Ngân hàng/Chứng khoáng/Đầu tư", "Nghệ thuật/Điện ảnh", "Nhân sự", "Nông/Lâm/Ngư nghiệp", "Quan hệ đối ngoại", "Thẩm định/Giám định/Quản lý chất lượng", "Quản lý điều hành", "Quảng cáo/Marketing/PR", "Sản xuất/Vận hành sản xuất", "Tài chính/Kế toán/Kiểm toán", "Thể dục/Thể thao", "Thiết kế/Mỹ thuật", "Thời vụ/Bán thời gian", "Thực phẩm/Dịch vụ an uống", "Xây dựng", "Xuất - Nhập khẩu/Ngoại thương", "Y tế", "Ngoại ngữ", "Khu chế xuất/Khu công nghiệp", "Làm đẹp/Thể lực/Spa", "Tài xế/Lái xe/Giao nhận", "Trang thiết bị công nghiệp", "Trang thiết bị gia dụng", "Trang thiết bị văn phòng", "PG/PB/Lễ tân", "Phát triển thị trường", "Phục vụ/Tạp vụ/Giúp việc"}));
 		
 		JLabel lbLuongCoBan = new JLabel("L\u01B0\u01A1ng c\u01A1 b\u1EA3n ");
 		lbLuongCoBan.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -245,7 +243,7 @@ public class DetailFrame {
 		lbTinhtp.setFont(new Font("Tahoma", Font.BOLD, 12));
 		
 		 cbbTinhtp = new JComboBox();
-		cbbTinhtp.setModel(new DefaultComboBoxModel(new String[] {"TP Hồ Chí Minh", "Đà Nẵng", "Hà Nội ", "Quảng Nam", "Huế", "Hải Phòng", "Cần Thơ", "Nha Trang ", "Đà Lạt"}));
+		cbbTinhtp.setModel(new DefaultComboBoxModel(new String[] {"Hà Nội", "TP Hồ Chí Minh", "An Giang", "Bà Rịa - Vũng Tàu", "Bắc Cạn", "Bắc Giang", "Bạc Liêu", "Bắc Ninh", "Bến Tre", "Bình Dương", "Bình Phước", "Bình Thuận", "Bình Định", "Cà Mau", "Cần Thơ", "Cao Bằng", "Gia Lai", "Hà Giang", "Hà Nam", "Hà Tĩnh", "Hải Dương", "Hải Phòng", "Hậu Giang", "Hòa Bình", "Hưng Yên", "Khánh Hòa", "Kiên Giang", "Kon Tum", "Lai Châu", "Lâm Đồng", "Lạng Sơn", "Lào Cai", "Long An", "Nam Định", "Nghệ An", "Ninh Bình", "Ninh Thuận", "Phú Thọ", "Phú Yên", "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Ninh", "Quảng Trị", "Sóc Trăng", "Sơ La", "Tây Ninh", "Thái Bình", "Thái Nguyên", "Thanh Hóa", "Thừa Thiên Huế", "Tiền Giang", "Trà Vinh", "Tuyên Quang", "Vĩnh Long", "Vĩnh Phúc", "Yên Bái", "Đà Nẵng", "Đắk Lắk", "Điện Biên", "Đồng Nai", "Đồng Tháp"}));
 		
 		JLabel lbLinhvuchoatdong = new JLabel("L\u0129nh v\u1EF1c ho\u1EA1t \u0111\u1ED9ng");
 		lbLinhvuchoatdong.setHorizontalAlignment(SwingConstants.RIGHT);

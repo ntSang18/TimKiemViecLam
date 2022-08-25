@@ -18,13 +18,14 @@ public class ViecLam {
 	private String LuongCoBan;
 	private Date NgayHetHan;
 	private String TenCT;
-	private int IdDC;
 	private int SDT;
 	private String QuyMoNhanSu;
 	private String LinhVucHD;
 	private String SoLuocCT;
 	private Boolean TrangThai;
 	private String TrinhDo;
+	private String Tinh;
+	private String DCCT;
 	public int GetId()
 	{
 		return Id;
@@ -145,14 +146,6 @@ public class ViecLam {
 	{
 		this.TenCT = tenct;
 	}
-	public int GetIdDC()
-	{
-		return IdDC;
-	}
-	public void SetIdDC(int iddc)
-	{
-		this.IdDC = iddc;
-	}
 	public int GetSDT()
 	{
 		return SDT;
@@ -202,6 +195,22 @@ public class ViecLam {
 	{
 		this.TrinhDo = trinhdo;
 	}
+	public String GetTinh()
+	{
+		return Tinh;
+	}
+	public void SetTinh(String tinh)
+	{
+		this.Tinh = tinh;
+	}
+	public String GetDCCT()
+	{
+		return DCCT;
+	}
+	public void SetDCCT(String dcct)
+	{
+		this.DCCT = dcct;
+	}
 	public void SetViecLam(ViecLam i)
 	{
 		this.SetId(i.GetId());
@@ -219,12 +228,13 @@ public class ViecLam {
 		this.SetLuongCoBan(i.GetLuongCoBan());
 		this.SetNgayHetHan(i.GetNgayHetHan());
 		this.SetTenCT(i.GetTenCT());
-		this.SetIdDC(i.GetIdDC());
 		this.SetSDT(i.GetSDT());
 		this.SetQuyMoNhanSu(i.GetQuyMoNhanSu());
 		this.SetLinhVucHD(i.GetLinhVucHD());
 		this.SetSoLuocCT(i.GetSoLuocCT());
 		this.SetTrangThai(i.GetTrangThai());
 		this.SetTrinhDo(i.GetTrinhDo());
+		this.SetTinh(i.GetTinh());
+		this.SetDCCT(i.GetDCCT());
 	}
 }

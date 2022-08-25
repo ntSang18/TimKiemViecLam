@@ -20,7 +20,6 @@ import com.toedter.calendar.JDateChooser;
 
 import PBL3_DA.BLL.BLL_Timviec;
 import PBL3_DA.DAL.DBHelper;
-import PBL3_DA.DTO.DiaChi;
 import PBL3_DA.DTO.ViecLam;
 
 import javax.swing.JButton;
@@ -50,10 +49,12 @@ public class PostFrame {
 	private JTextField textSDT;
 	private JTextField textNhanSu;
 	private JTextField textLinhVucHD;
+	private static int iddangdung;
 	/**
 	 * Create the application.
 	 */
-	public PostFrame() {
+	public PostFrame(int id) {
+		iddangdung = id;
 		initialize();
 	}
 
@@ -202,7 +203,7 @@ public class PostFrame {
 		lbTinhtp.setFont(new Font("Tahoma", Font.BOLD, 12));
 		
 		JComboBox cbbTinhtp = new JComboBox();
-		cbbTinhtp.setModel(new DefaultComboBoxModel(new String[] {"Hà Nội", "TP Hồ Chí Minh", "An Giang", "Bà Rịa - Vũng Tàu", "Bắc Cạn", "Bắc Giang", "Bạc Liêu", "Bắc Ninh", "Bến Tre", "Bình Dương", "Bình Phước", "Bình Thuận", "Bình Định", "Cà Mau", "Cần Thơ", "Cao Bằng", "Gia Lai", "Hà Giang", "Hà Nam", "Hà Tĩnh", "Hải Dương", "Hải Phòng", "Hậu Giang", "Hòa Bình", "Hưng Yên", "Khánh Hòa", "Kiên Giang", "Kon Tum", "Lai Châu", "Lâm Đồng", "Lạng Sơn", "Lào Cai", "Long An", "Nam Định", "Nghệ An", "Ninh Bình", "Ninh Thuận", "Phú Thọ", "Phú Yên", "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Ninh", "Quảng Trị", "Sóc Trăng", "Sơ La", "Tây Ninh", "Thái Bình", "Thái Nguyên", "Thanh Hóa", "Thừa Thiên Huế", "Tiền Giang", "Trà Vinh", "Tuyên Quang", "Vĩnh Long", "Vĩnh Phúc", "Yên Bái", "Đà Năng", "Đắk Lắk", "Điện Biên", "Đồng Nai", "Đồng Tháp"}));
+		cbbTinhtp.setModel(new DefaultComboBoxModel(new String[] {"Hà Nội", "TP Hồ Chí Minh", "An Giang", "Bà Rịa - Vũng Tàu", "Bắc Cạn", "Bắc Giang", "Bạc Liêu", "Bắc Ninh", "Bến Tre", "Bình Dương", "Bình Phước", "Bình Thuận", "Bình Định", "Cà Mau", "Cần Thơ", "Cao Bằng", "Gia Lai", "Hà Giang", "Hà Nam", "Hà Tĩnh", "Hải Dương", "Hải Phòng", "Hậu Giang", "Hòa Bình", "Hưng Yên", "Khánh Hòa", "Kiên Giang", "Kon Tum", "Lai Châu", "Lâm Đồng", "Lạng Sơn", "Lào Cai", "Long An", "Nam Định", "Nghệ An", "Ninh Bình", "Ninh Thuận", "Phú Thọ", "Phú Yên", "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Ninh", "Quảng Trị", "Sóc Trăng", "Sơ La", "Tây Ninh", "Thái Bình", "Thái Nguyên", "Thanh Hóa", "Thừa Thiên Huế", "Tiền Giang", "Trà Vinh", "Tuyên Quang", "Vĩnh Long", "Vĩnh Phúc", "Yên Bái", "Đà Nẵng", "Đắk Lắk", "Điện Biên", "Đồng Nai", "Đồng Tháp"}));
 		
 		JLabel lbLinhvuchoatdong = new JLabel("L\u0129nh v\u1EF1c ho\u1EA1t \u0111\u1ED9ng");
 		lbLinhvuchoatdong.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -228,16 +229,18 @@ public class PostFrame {
 			public void actionPerformed(ActionEvent e) {
 				try 
 				{
-					DiaChi d = new DiaChi();
-					d.SetTinh((String)cbbTinhtp.getSelectedItem());
-					d.SetDCCT(textDC.getText());
-					BLL_Timviec.Instance().AddDiaChi(d);
 					ViecLam v = new ViecLam();
-					v.SetIdUser(1);
+					v.SetIdUser(iddangdung);
+					if(textTieuDe.getText() == "")
+					{
+						JOptionPane.showMessageDialog(frmTuynDng, "Bạn chưa nhập tiêu đề");
+						throw new Exception("Tiêu đề không hợp lệ");
+					}
 					v.SetTieuDe(textTieuDe.getText());
 					if(BLL_Timviec.Instance().Isnumber(textSoLuongTuyen.getText()) == false)
 					{
 						JOptionPane.showMessageDialog(frmTuynDng, "Số lượng tuyển không hợp lệ");
+						throw new Exception("Số lượng không hợp lệ");
 					}
 					v.SetSoLuongTuyen(Integer.parseInt(textSoLuongTuyen.getText()));
 					v.SetGioiTinhTuyen((String)cbbGioitinh.getSelectedItem());
@@ -260,9 +263,7 @@ public class PostFrame {
 						throw new Exception("Date không hợp lệ");
 					}
 					v.SetTenCT(textTenCT.getText());
-					d.SetId((BLL_Timviec.Instance().GetDiaChi(d.GetTinh(), d.GetDCCT())).GetId());
-					v.SetIdDC(d.GetId());
-					if(BLL_Timviec.Instance().Isnumber(textSDT.getText()) == false || textSDT.getText().trim().length() < 10 || textSDT.getText().trim().length() > 12)
+					if(BLL_Timviec.Instance().Isnumber(textSDT.getText()) == false)
 					{
 						JOptionPane.showMessageDialog(frmTuynDng, "Số điện thoại không hợp lệ");
 						throw new Exception("SDT không hợp lệ");
@@ -273,6 +274,8 @@ public class PostFrame {
 					v.SetSoLuocCT(txtareaSoluoc.getText());
 					v.SetTrangThai(false);
 					v.SetTrinhDo((String)cbbtrinhdo.getSelectedItem());
+					v.SetTinh((String)cbbTinhtp.getSelectedItem());
+					v.SetDCCT(textDC.getText());
 					BLL_Timviec.Instance().AddViecLam(v);
 					JOptionPane.showMessageDialog(frmTuynDng, "Đăng thành công!!!");
 					frmTuynDng.setVisible(false);
@@ -499,5 +502,12 @@ public class PostFrame {
 					.addGap(33))
 		);
 		panel_1.setLayout(gl_panel_1);
+		cbbGioitinh.setSelectedIndex(-1);
+		cbbKinhnghiem.setSelectedIndex(-1);
+		cbbLoaihinhcv.setSelectedIndex(-1);
+		cbbLuongcoban.setSelectedIndex(-1);
+		cbbNganhnghe.setSelectedIndex(-1);
+		cbbtrinhdo.setSelectedIndex(-1);
+		cbbTinhtp.setSelectedIndex(-1);
 	}
 }
